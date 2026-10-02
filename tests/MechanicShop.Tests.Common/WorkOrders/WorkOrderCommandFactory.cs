@@ -14,6 +14,11 @@ public static class WorkOrderCommandFactory
         List<Guid>? repairTaskIds = null,
         Guid? laborId = null)
     {
-        return new CreateWorkOrderCommand();
+            return new CreateWorkOrderCommand(
+            vehicleId ?? Guid.NewGuid(),
+            spot ?? Spot.A,
+            startAt ?? DateTimeOffset.UtcNow.AddDays(1).Date.AddHours(9),
+            repairTaskIds ?? [Guid.NewGuid()],
+            laborId ?? Guid.NewGuid());
     }
 }
