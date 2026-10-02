@@ -128,7 +128,7 @@ public class WorkOrderMapperTests
         workOrder.Labor = labor;
 
         // Act
-        var dto = workOrder.();
+        var dto = workOrder.ToListItemDto();
 
         // Assert
         Assert.Equal(workOrder.Id, dto.WorkOrderId);

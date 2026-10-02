@@ -34,8 +34,26 @@ public static class WorkOrderMapper
         };
     }
 
-    public static List<WorkOrderDto> ToDtos(this IEnumerable<WorkOrder> entities)
+      public static List<WorkOrderDto> ToDtos(this IEnumerable<WorkOrder> entities)
     {
         return [.. entities.Select(e => e.ToDto())];
+    }
+
+      public static WorkOrderListItemDto ToListItemDto(this WorkOrder entity)
+    {
+        ArgumentNullException.ThrowIfNull(entity);
+
+        return new WorkOrderListItemDto
+        {
+            WorkOrderId = entity.Id,
+            Spot = entity.Spot,
+            StartAtUtc = entity.StartAtUtc,
+            EndAtUtc = entity.EndAtUtc,
+            Vehicle = entity.Vehicle!.ToDto(),
+            Labor = entity.Labor is null ? null :
+                $"{entity.Labor.FirstName} {entity.Labor.LastName}",
+            State = entity.State,
+            RepairTasks = entity.RepairTasks.Select(rt => rt.Name).ToList()
+        };
     }
 }
