@@ -27,7 +27,7 @@ The system provides a structured way to manage:
 * 💰 Parts & Labor Costs
 * 📊 Operational Monitoring
 
-The project was designed with a focus on **maintainability, separation of concerns, domain modeling, performance, security, and production-oriented backend practices**.
+The project was designed with a focus on **maintainability, separation of concerns, domain modeling, performance, security, observability, and production-oriented backend practices**.
 
 ---
 
@@ -42,7 +42,7 @@ Automotive workshops often rely on manual or disconnected processes for:
 * Tracking work-order status
 * Managing parts and labor costs
 * Generating invoices
-* Monitoring application health and performance
+* Monitoring application behavior and performance
 
 This system provides a centralized backend solution for managing these workflows through a structured RESTful API.
 
@@ -77,7 +77,7 @@ This system provides a centralized backend solution for managing these workflows
 
 * Track parts used during repairs
 * Define quantities and unit costs
-* Automatically calculate parts costs
+* Calculate parts costs
 
 ### 💰 Invoice Management
 
@@ -92,7 +92,8 @@ This system provides a centralized backend solution for managing these workflows
 
 * JWT-based authentication
 * ASP.NET Core Identity
-* Role and policy-based authorization
+* Role-based authorization
+* Policy-based authorization
 * Protected API endpoints
 * Secure password management
 
@@ -103,20 +104,18 @@ This system provides a centralized backend solution for managing these workflows
 * Distributed tracing with OpenTelemetry
 * Prometheus metrics
 * Grafana dashboards
-* Application health checks
 * Request/correlation identifiers
 
 ### ⚡ Performance
 
 * In-memory caching
-* Hybrid caching
+* HybridCache
 * Output caching
 * Rate limiting
-* Response compression
 
 ---
 
-# 🏗️ Architecture
+## 🏗️ Architecture
 
 The application follows **Clean Architecture** principles with a dedicated **Contracts layer** for API-facing request and response models.
 
@@ -153,9 +152,10 @@ The application follows **Clean Architecture** principles with a dedicated **Con
 │ Entities / Business Rules    │
 │ Errors / Domain Abstractions │
 └──────────────────────────────┘
-               ▲
-               │
-┌──────────────┴───────────────┐
+
+        ▲
+        │
+┌───────┴──────────────────────┐
 │    Infrastructure Layer      │
 │                              │
 │ EF Core / SQL Server         │
@@ -164,7 +164,7 @@ The application follows **Clean Architecture** principles with a dedicated **Con
 └──────────────────────────────┘
 ```
 
-### Architectural Goals
+## Architectural Goals
 
 * Separation of concerns
 * Dependency inversion
@@ -185,10 +185,11 @@ The result is a clearer API boundary and reduced coupling between the public API
 
 ---
 
-# 📂 Project Structure
+## 📂 Project Structure
 
 ```text
 src/
+
 │
 ├── MechanicShop.Api/
 │   ├── Controllers/
@@ -223,7 +224,7 @@ src/
 
 ---
 
-# 🧠 Domain Model
+## 🧠 Domain Model
 
 The domain is centered around the **Work Order**, which represents a vehicle's repair session inside the workshop.
 
@@ -293,7 +294,7 @@ Labor Cost
 
 ---
 
-# 🧩 Domain-Driven Design
+## 🧩 Domain-Driven Design
 
 The project applies practical **Domain-Driven Design (DDD)** concepts where they provide real value.
 
@@ -314,7 +315,7 @@ This helps:
 
 ---
 
-# 🛡️ Error Handling
+## 🛡️ Error Handling
 
 The application uses a centralized **Result / Error Pattern** for expected application and business failures.
 
@@ -350,7 +351,7 @@ Unexpected exceptions are handled through centralized exception handling at the 
 
 ---
 
-# 🔄 Request Pipeline
+## 🔄 Request Pipeline
 
 A typical request flows through the application as follows:
 
@@ -398,7 +399,7 @@ HTTP Response
 
 ---
 
-# 🗄️ Data Access
+## 🗄️ Data Access
 
 The application uses:
 
@@ -434,7 +435,7 @@ SQL Server
 
 ---
 
-# 🔐 Security
+## 🔐 Security
 
 Security-related features include:
 
@@ -449,9 +450,11 @@ Security-related features include:
 
 Sensitive configuration values such as JWT secrets and database credentials should be provided through environment-specific configuration and should never be committed to source control.
 
+For production environments, use environment variables or an appropriate secrets-management solution.
+
 ---
 
-# ⚡ Performance
+## ⚡ Performance
 
 The project implements several production-oriented performance techniques.
 
@@ -459,7 +462,7 @@ The project implements several production-oriented performance techniques.
 
 HybridCache is used for application-level query caching through a MediatR pipeline behavior.
 
-The architecture uses in-memory caching for fast local access.
+The architecture uses in-memory caching for fast local access while remaining ready for distributed caching configuration when required.
 
 ### Output Caching
 
@@ -469,13 +472,9 @@ Output caching is used for suitable HTTP endpoints to reduce repeated processing
 
 Rate limiting helps protect API resources from excessive requests and controls resource consumption.
 
-### Response Compression
-
-Response compression reduces HTTP payload sizes and network overhead for supported responses.
-
 ---
 
-# 📈 Observability
+## 📈 Observability
 
 Observability is treated as part of the application architecture rather than an afterthought.
 
@@ -486,9 +485,9 @@ The project provides visibility into:
 * Performance
 * Logs
 * Metrics
-* Availability
+* Availability-related application signals
 
-### 📝 Structured Logging
+## 📝 Structured Logging
 
 **Serilog** is used for structured application logging.
 
@@ -515,13 +514,9 @@ Logs can contain contextual information such as request identifiers, making trou
 
 **OpenTelemetry** is used to collect tracing information and provide visibility into request execution and application flow.
 
-### ❤️ Health Checks
-
-Health checks provide a standardized way to verify application availability and readiness.
-
 ---
 
-# 🧾 Invoice & PDF Generation
+## 🧾 Invoice & PDF Generation
 
 The system supports invoice generation based on completed work orders.
 
@@ -561,7 +556,7 @@ The PDF generation logic is isolated behind an application abstraction so that p
 
 ---
 
-# 📖 API Documentation
+## 📖 API Documentation
 
 The API is documented using **OpenAPI / Swagger**.
 
@@ -583,7 +578,7 @@ http://localhost:5194/swagger
 
 ---
 
-# 🐳 Docker & Infrastructure
+## 🐳 Docker & Infrastructure
 
 The project includes containerized infrastructure for local development and integration.
 
@@ -608,17 +603,63 @@ Example architecture:
           ┌──────────────────┼──────────────────┐
           │                  │                  │
           ▼                  ▼                  ▼
-     SQL Server             Seq            Prometheus
-                                                │
-                                                ▼
-                                            Grafana
+      SQL Server            Seq             Prometheus
+                                                 │
+                                                 ▼
+                                             Grafana
 ```
 
 Persistent services use Docker volumes where appropriate so that container restarts do not unnecessarily remove stored service data.
 
 ---
 
-# 🚀 Getting Started
+## 🔄 Continuous Integration
+
+The project uses **GitHub Actions** to automatically validate the application on every push to `master` and on pull requests.
+
+The CI workflow performs:
+
+```text
+Checkout Code
+      ↓
+Setup .NET 9
+      ↓
+Restore Dependencies
+      ↓
+Build Solution
+      ↓
+Run Automated Tests
+```
+
+The pipeline ensures that the solution can be restored, compiled, and tested successfully in a clean CI environment.
+
+### Automated Test Results
+
+The current test suite contains **95 automated tests**.
+
+```text
+95 Tests
+95 Passed
+0 Failed
+```
+
+The test suite helps detect:
+
+* Compilation issues
+* Missing dependencies
+* Broken business rules
+* Application behavior regressions
+* Runtime dependency problems
+
+The workflow configuration is located under:
+
+```text
+.github/workflows/
+```
+
+---
+
+## 🚀 Getting Started
 
 ## Prerequisites
 
@@ -634,9 +675,8 @@ Make sure you have the following installed:
 ## 📥 Clone the Repository
 
 ```bash
-git clone https://github.com/Malakgerges-dev/MechanicShopWorkshop.git
-
-cd MechanicShopWorkshop
+git clone https://github.com/Malakgerges-dev/MechanicShop-Api.git
+cd MechanicShop-Api
 ```
 
 ---
@@ -652,7 +692,6 @@ Example:
   "ConnectionStrings": {
     "DefaultConnection": "your-connection-string"
   },
-
   "Jwt": {
     "Key": "your-secret-key"
   }
@@ -713,18 +752,20 @@ The required services will be started according to the Docker Compose configurat
 
 ---
 
-# 🧪 Testing
+## 🧪 Testing
 
-The project is structured to support automated testing across the application's major layers.
+The project uses automated tests across different application layers.
 
-Recommended test organization:
+Current test projects include:
 
 ```text
 tests/
 
-├── MechanicShop.Domain.Tests/
-├── MechanicShop.Application.Tests/
-└── MechanicShop.Infrastructure.Tests/
+├── MechanicShop.Domain.UnitTests/
+├── MechanicShop.Application.UnitTests/
+├── MechanicShop.Application.SubcutaneousTests/
+├── MechanicShop.Api.IntegrationTests/
+└── MechanicShop.Tests.Common/
 ```
 
 The testing strategy focuses on validating:
@@ -733,12 +774,28 @@ The testing strategy focuses on validating:
 * Application use cases
 * Validation behavior
 * Error handling
-* Infrastructure integrations
+* Application behaviors
+* Mapping
+* Infrastructure-related integrations
 * API behavior
+
+The current suite contains:
+
+```text
+95 Tests
+95 Passed
+0 Failed
+```
+
+Tests can be executed with:
+
+```bash
+dotnet test --configuration Release
+```
 
 ---
 
-# 🛠️ Technology Stack
+## 🛠️ Technology Stack
 
 | Technology                | Purpose                               |
 | ------------------------- | ------------------------------------- |
@@ -751,6 +808,7 @@ The testing strategy focuses on validating:
 | **HybridCache**           | Application-level caching             |
 | **In-Memory Caching**     | Fast local caching                    |
 | **Output Caching**        | HTTP response caching                 |
+| **Rate Limiting**         | API resource protection               |
 | **JWT**                   | Authentication                        |
 | **ASP.NET Core Identity** | Identity management                   |
 | **MediatR**               | Application request/response pipeline |
@@ -760,15 +818,15 @@ The testing strategy focuses on validating:
 | **OpenTelemetry**         | Distributed tracing & observability   |
 | **Prometheus**            | Metrics collection                    |
 | **Grafana**               | Metrics visualization                 |
-| **Health Checks**         | Application health monitoring         |
 | **Swagger / OpenAPI**     | API documentation                     |
 | **QuestPDF**              | PDF invoice generation                |
 | **Docker**                | Containerization                      |
+| **GitHub Actions**        | Continuous Integration                |
 | **Git**                   | Version control                       |
 
 ---
 
-# 📐 Engineering Principles
+## 📐 Engineering Principles
 
 The project follows several software engineering principles:
 
@@ -788,13 +846,13 @@ The project follows several software engineering principles:
 
 ---
 
-# 🧭 Future Improvements
+## 🧭 Future Improvements
 
 Potential future improvements include:
 
-* [ ] Expand automated unit tests
-* [ ] Add comprehensive integration tests
-* [ ] CI/CD pipeline
+* [ ] Expand automated unit test coverage
+* [ ] Expand integration test coverage
+* [ ] Automated deployment / CD pipeline
 * [ ] Cloud deployment
 * [ ] Advanced scheduling capabilities
 * [ ] Notifications
@@ -804,7 +862,7 @@ Potential future improvements include:
 
 ---
 
-# 🎓 What This Project Demonstrates
+## 🎓 What This Project Demonstrates
 
 This project goes beyond a basic CRUD application and demonstrates practical backend engineering concepts.
 
@@ -838,7 +896,6 @@ This project goes beyond a basic CRUD application and demonstrates practical bac
 * In-memory caching
 * Output caching
 * Rate limiting
-* Response compression
 
 ### Observability
 
@@ -847,7 +904,6 @@ This project goes beyond a basic CRUD application and demonstrates practical bac
 * Distributed tracing
 * Metrics collection
 * Monitoring dashboards
-* Health checks
 * Request correlation
 
 ### Infrastructure
@@ -870,11 +926,11 @@ This project goes beyond a basic CRUD application and demonstrates practical bac
 
 ---
 
-# 👨‍💻 Author
+## 👨‍💻 Author
 
 ## Malak Gerges
 
-**.NET Backend Developer**
+***.NET Backend Developer**
 
 ### Technical Focus
 
