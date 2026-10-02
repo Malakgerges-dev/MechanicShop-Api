@@ -1,0 +1,23 @@
+using FluentValidation;
+using MechanicShop.Application.Features.RepairTasks.Command.UpdateRepairTask;
+
+namespace MechanicShop.Application.Features.RepairTasks.Command.CreateRepairTask;
+
+
+public sealed class UpdateRepairTaskPartCommandValidator : AbstractValidator<UpdateRepairTaskPartCommand>
+{
+    public UpdateRepairTaskPartCommandValidator()
+    {
+        RuleFor(x => x.Name)
+            .NotEmpty().WithMessage("Part name is required.")
+            .MaximumLength(100);
+
+        RuleFor(x => x.Cost)
+            .InclusiveBetween(1,10_000)
+            .WithMessage(" cost must be between 1 To 10,000.");
+
+        RuleFor(x => x.Quantity)
+            .InclusiveBetween(1,10)
+            .WithMessage("Quantity must be between 1 To 10.");
+    }
+}
