@@ -24,7 +24,7 @@ public class EmployeeTests
         Assert.Equal(firstName, employee.FirstName);
         Assert.Equal(lastName, employee.LastName);
         Assert.Equal(role, employee.Role);
-        Assert.Equal("John Doe", employee.FullName);
+        Assert.Equal("Malak Gerges", employee.FullName);
     }
 
     [Fact]
@@ -63,8 +63,7 @@ public class EmployeeTests
         var result = Employee.Create(Guid.NewGuid(), "Malak", "Gerges", (Role)999);
 
         Assert.True(result.IsError);
-        Assert.Equal(EmployeeErrors.FirstNameRequired.Code, result.TopError.Code);
-        Assert.Equal(EmployeeErrors.FirstNameRequired.Description, result.TopError.Description);
+        Assert.Equal(EmployeeErrors.RoleInvalid.Code, result.TopError.Code);
+        Assert.Equal(EmployeeErrors.RoleInvalid.Description, result.TopError.Description);
     }
-
 }

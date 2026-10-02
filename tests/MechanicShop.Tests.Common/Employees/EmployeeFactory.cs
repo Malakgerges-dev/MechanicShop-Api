@@ -10,8 +10,8 @@ public static class EmployeeFactory
     {
         return Employee.Create(
             id ?? Guid.NewGuid(),
-            firstName ?? "John",
-            lastName ?? "Doe",
+            firstName ?? "Malak",
+            lastName ?? "Gerges",
             role ?? Role.Labor);
     }
 

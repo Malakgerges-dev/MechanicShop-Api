@@ -139,7 +139,7 @@ public class RepairTaskTests
     [InlineData("", 1, RepairDurationInMinutes.Min30, false)]
     [InlineData("  ", 1, RepairDurationInMinutes.Min30, false)]
     [InlineData("Name", 0, RepairDurationInMinutes.Min30, false)]
-    [InlineData("Name", 10001, RepairDurationInMinutes.Min30, false)]
+    [InlineData("Name", -1, RepairDurationInMinutes.Min30, false)]
     public void Update_ShouldReturnError_ForInvalidNameOrCost(string name, decimal cost, RepairDurationInMinutes dur, bool expected)
     {
         var task = RepairTaskFactory.CreateRepairTask().Value;

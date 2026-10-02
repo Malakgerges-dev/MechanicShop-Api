@@ -18,6 +18,6 @@ public static class InvoiceFactory
             items ?? [InvoiceLineItem.Create(Guid.NewGuid(), 1, "Oil Change", 2, 50).Value],
             discount ?? 0,
             taxAmount ?? 0,
-            TimeProvider.System);
+            timeProvider ?? TimeProvider.System);
     }
 }
